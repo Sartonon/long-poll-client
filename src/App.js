@@ -15,9 +15,9 @@ class App extends Component {
     color: 0,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.getPastMessages();
     this.getMessages();
-    this.initWebSocket();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -29,40 +29,34 @@ class App extends Component {
     }
   }
 
-  getMessages = async () => {
-    const { data } = await axios.get("http://139.162.254.62/api/messages");
-    console.log(data);
+  getPastMessages = async () => {
+    const { data } = await axios.get("http://localhost:3000/longpoll/pastMessages");
     this.setState({ messages: data });
   };
 
-  initWebSocket = () => {
-    this.websocket = new WebSocket("ws://139.162.254.62/ws");
-    this.websocket.onmessage = this.handleMessage;
-    this.websocket.onerror = this.handleError;
-    this.websocket.onclose = this.handleOnClose;
-  };
-
-  handleOnClose = () => {
-    console.log("Connection closed, starting new one...");
-    this.initWebSocket();
-  };
-
-  handleError = (error) => {
-    console.log("error: ", error);
+  getMessages = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:3000/longpoll/messages");
+      this.handleMessage(data);
+      console.log(data);
+      this.getMessages();
+    } catch (err) {
+      console.log("error: ", err);
+    }
   };
 
   sendMessage = (e) => {
     e.preventDefault();
-    this.websocket.send(JSON.stringify({
+    axios.post("http://localhost:3000/longpoll/messages", {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color,
-    }));
+    });
     this.setState({ message: "" });
   };
 
-  handleMessage = (e) => {
-    this.setState({ messages: [ ...this.state.messages, JSON.parse(e.data) ] });
+  handleMessage = data => {
+    this.setState({ messages: [ ...this.state.messages, data ] });
     setTimeout(() => {
       const objDiv = document.getElementById("chatwindow");
       if (objDiv) {
