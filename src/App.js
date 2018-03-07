@@ -30,13 +30,13 @@ class App extends Component {
   }
 
   getPastMessages = async () => {
-    const { data } = await axios.get("http://localhost:3000/longpoll/pastMessages");
+    const { data } = await axios.get("http://139.162.254.62/longpoll/pastMessages");
     this.setState({ messages: data });
   };
 
   getMessages = async () => {
     try {
-      const { data } = await axios.get("http://localhost:3000/longpoll/messages");
+      const { data } = await axios.get("http://139.162.254.62/longpoll/messages");
       this.handleMessage(data);
       console.log(data);
       this.getMessages();
@@ -47,7 +47,7 @@ class App extends Component {
 
   sendMessage = (e) => {
     e.preventDefault();
-    axios.post("http://localhost:3000/longpoll/messages", {
+    axios.post("http://139.162.254.62/longpoll/messages", {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color,
