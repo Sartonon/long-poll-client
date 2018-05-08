@@ -1,8 +1,8 @@
 {
-  "name": "web-socket-client",
+  "name": "pong-poll-client",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://139.162.254.62/",
+  "homepage" : "http://longpoll.sartonon.fi/",
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.0.0",
