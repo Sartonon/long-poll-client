@@ -2,7 +2,7 @@
   "name": "web-socket-client",
   "version": "0.1.0",
   "private": true,
-  "homepage" : "http://139.162.254.62/app2",
+  "homepage" : "http://139.162.254.62/",
   "dependencies": {
     "axios": "^0.18.0",
     "react": "^16.0.0",
