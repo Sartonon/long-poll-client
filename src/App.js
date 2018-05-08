@@ -47,7 +47,7 @@ class App extends Component {
 
   sendMessage = (e) => {
     e.preventDefault();
-    axios.post("http://139.162.254.62/longpoll/messages", {
+    axios.post("http://longpoll.sartonon.fi/messages", {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color,
