@@ -12,7 +12,7 @@ class App extends Component {
     username: "",
     usernameConfirmed: false,
     message: "",
-    color: 0,
+    color: 'green',
   };
 
   async componentDidMount() {
@@ -87,7 +87,7 @@ class App extends Component {
   confirmUsername = () => {
     this.setState({
       usernameConfirmed: true,
-      color: `rgb(${getRandomInt(255)}, ${getRandomInt(255)}, ${getRandomInt(255)})`,
+      color: 'green',
     });
   };
 
