@@ -9,6 +9,7 @@ function getRandomInt(max) {
 class App extends Component {
   state = {
     messages: [],
+    displayedMessages: []
     username: "",
     usernameConfirmed: false,
     message: "",
@@ -27,8 +28,8 @@ class App extends Component {
       }
     }
 
-    if (this.state.messages.length > 10) {
-      this.setState({ messages: [] });
+    if (this.state.displayedMessages.length > 10) {
+      this.setState({ displayedMessages: [] });
     }
   }
 
@@ -104,7 +105,7 @@ class App extends Component {
   };
 
   renderMessages = () => {
-    return this.state.messages.map((message, i) => {
+    return this.state.displayedMessages.map((message, i) => {
       return (
         <div className="Message-wrapper" key={i}>
           <div className="Message-block" key={i} style={{ float: message.name === this.state.username ? "right" : "left" }}>
