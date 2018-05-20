@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { Component } from "react";
+import axios from "axios";
+import "./App.css";
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -13,7 +13,7 @@ class App extends Component {
     username: "",
     usernameConfirmed: false,
     message: "",
-    color: 'green',
+    color: "green"
   };
 
   async componentDidMount() {
@@ -34,13 +34,17 @@ class App extends Component {
   }
 
   getPastMessages = async () => {
-    const { data } = await axios.get("http://longpoll.sartonon.fi/api/pastMessages");
+    const { data } = await axios.get(
+      "http://longpoll.sartonon.fi/api/pastMessages"
+    );
     this.setState({ messages: data });
   };
 
   getMessages = async () => {
     try {
-      const { data } = await axios.get(`http://longpoll.sartonon.fi/api/messages?id=${this.getId()}`);
+      const { data } = await axios.get(
+        `http://longpoll.sartonon.fi/api/messages?id=${this.getId()}`
+      );
       this.handleMessage(data);
       console.log(data);
       this.getMessages();
@@ -57,18 +61,21 @@ class App extends Component {
     return null;
   };
 
-  sendMessage = (e) => {
+  sendMessage = e => {
     e.preventDefault();
     axios.post(`http://longpoll.sartonon.fi/api/messages`, {
       name: this.state.username,
       message: this.state.message,
-      color: this.state.color,
+      color: this.state.color
     });
     this.setState({ message: "" });
   };
 
   handleMessage = data => {
-    this.setState({ messages: [ ...this.state.messages, ...data ] });
+    this.setState({
+      messages: [...this.state.messages, ...data],
+      displayedMessages: [...this.state.displayedMessages, ...data]
+    });
     setTimeout(() => {
       const objDiv = document.getElementById("chatwindow");
       if (objDiv) {
@@ -77,17 +84,17 @@ class App extends Component {
     }, 200);
   };
 
-  changeUsername = (e) => {
-    this.setState({ username: e.target.value })
+  changeUsername = e => {
+    this.setState({ username: e.target.value });
   };
 
   startSending = () => {
     if (this.messageInterval) clearInterval(this.messageInterval);
     this.messageInterval = setInterval(() => {
       axios.post("http://longpoll.sartonon.fi/api/messages", {
-        name: 'Santeri',
-        message: 'Moikka!',
-        color: 'green',
+        name: "Santeri",
+        message: "Moikka!",
+        color: "green"
       });
     }, this.state.interval || 1000);
   };
@@ -95,12 +102,12 @@ class App extends Component {
   confirmUsername = () => {
     this.setState({
       usernameConfirmed: true,
-      color: 'green',
+      color: "green"
     });
     this.getMessages();
   };
 
-  handleMessageChange = (e) => {
+  handleMessageChange = e => {
     this.setState({ message: e.target.value });
   };
 
@@ -108,8 +115,16 @@ class App extends Component {
     return this.state.displayedMessages.map((message, i) => {
       return (
         <div className="Message-wrapper" key={i}>
-          <div className="Message-block" key={i} style={{ float: message.name === this.state.username ? "right" : "left" }}>
-            <div className="Message-name" style={{ color: message.color }}>{message.name}</div>
+          <div
+            className="Message-block"
+            key={i}
+            style={{
+              float: message.name === this.state.username ? "right" : "left"
+            }}
+          >
+            <div className="Message-name" style={{ color: message.color }}>
+              {message.name}
+            </div>
             <div className="Message-content">{message.message}</div>
           </div>
         </div>
@@ -127,24 +142,41 @@ class App extends Component {
           <button onClick={this.startSending}>Laheta</button>
           <input onChange={e => this.setState({ interval: e.target.value })} />
         </header>
-        {!usernameConfirmed ?
+        {!usernameConfirmed ? (
           <div className="Login-div">
-            <p style={{ fontWeight: "bold", fontSize: "16px" }}>Anna käyttäjänimi</p>
-            <input className="Login-input" value={this.state.username} onChange={this.changeUsername} type="text" />
-            <div className="Ok-button" onClick={this.confirmUsername}>Ok</div>
-          </div> :
+            <p style={{ fontWeight: "bold", fontSize: "16px" }}>
+              Anna käyttäjänimi
+            </p>
+            <input
+              className="Login-input"
+              value={this.state.username}
+              onChange={this.changeUsername}
+              type="text"
+            />
+            <div className="Ok-button" onClick={this.confirmUsername}>
+              Ok
+            </div>
+          </div>
+        ) : (
           <div className="Chat-window">
             <div id="chatwindow" className="Message-div">
               {this.renderMessages()}
             </div>
             <form onSubmit={this.sendMessage}>
               <div className="Chat-input">
-                <input className="Chat-inputfield" onChange={this.handleMessageChange} value={this.state.message} type="text" />
-                <div className="Send-button" onClick={this.sendMessage}>Lähetä</div>
+                <input
+                  className="Chat-inputfield"
+                  onChange={this.handleMessageChange}
+                  value={this.state.message}
+                  type="text"
+                />
+                <div className="Send-button" onClick={this.sendMessage}>
+                  Lähetä
+                </div>
               </div>
             </form>
           </div>
-        }
+        )}
       </div>
     );
   }
