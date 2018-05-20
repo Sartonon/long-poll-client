@@ -67,7 +67,7 @@ class App extends Component {
   };
 
   handleMessage = data => {
-    this.setState({ messages: [ ...this.state.messages, data ] });
+    this.setState({ messages: [ ...this.state.messages, ...data ] });
     setTimeout(() => {
       const objDiv = document.getElementById("chatwindow");
       if (objDiv) {
