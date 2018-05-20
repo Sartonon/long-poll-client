@@ -9,7 +9,7 @@ function getRandomInt(max) {
 class App extends Component {
   state = {
     messages: [],
-    displayedMessages: []
+    displayedMessages: [],
     username: "",
     usernameConfirmed: false,
     message: "",
