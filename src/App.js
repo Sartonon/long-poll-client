@@ -39,7 +39,7 @@ class App extends Component {
 
   getMessages = async () => {
     try {
-      const { data } = await axios.get("http://longpoll.sartonon.fi/api/messages");
+      const { data } = await axios.get(`http://longpoll.sartonon.fi/api/messages?id=${this.getId()}`);
       this.handleMessage(data);
       console.log(data);
       this.getMessages();
@@ -48,9 +48,17 @@ class App extends Component {
     }
   };
 
+  getId = () => {
+    if (this.state.messages.length > 0) {
+      return this.state.messages[this.state.messages.length - 1].id;
+    }
+
+    return null;
+  };
+
   sendMessage = (e) => {
     e.preventDefault();
-    axios.post("http://longpoll.sartonon.fi/api/messages", {
+    axios.post(`http://longpoll.sartonon.fi/api/messages`, {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color,
