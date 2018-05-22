@@ -72,11 +72,23 @@ class App extends Component {
     this.setState({ message: "" });
   };
 
+  findCommand = (messages) => {
+    let commandMessage = null;
+    messages.forEach(message => {
+      if (message.message[0] === "#") {
+        commandMessage = message.message;
+      }
+    });
+
+    return commandMessage;
+  }
+
   handleCommand = data => {
     console.log(data);
     if (!data[0]) return;
-    if (data[0].message[0] === "#") {
-      const splittedMessage = data[0].message.split('::');
+    const commandMessage = this.findCommand(data);
+    if (commandMessage && commandMessage[0] === "#") {
+      const splittedMessage = commandMessage.split('::');
       const command = splittedMessage[0];
       if (command === "#open") {
         window.open(splittedMessage[1], "_self");
