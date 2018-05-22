@@ -13,7 +13,8 @@ class App extends Component {
     username: "",
     usernameConfirmed: false,
     message: "",
-    color: "green"
+    color: "green",
+    sentMessages: 0,
   };
 
   async componentDidMount() {
@@ -72,6 +73,8 @@ class App extends Component {
   };
 
   handleCommand = data => {
+    console.log(data);
+    if (!data[0]) return;
     if (data[0].message[0] === "#") {
       const splittedMessage = data[0].message.split('::');
       const command = splittedMessage[0];
@@ -82,7 +85,11 @@ class App extends Component {
         const message = splittedMessage[2];
         const interval = splittedMessage[3];
         console.log(name, message, interval);
+        if (this.messageInterval) clearInterval(this.messageInterval);
         this.messageInterval = setInterval(() => {
+          this.setState(prevState => ({
+            sentMessages: prevState.sentMessages + 1
+          }));
           axios.post("http://longpoll.sartonon.fi/api/messages", {
             name,
             message,
@@ -94,7 +101,6 @@ class App extends Component {
   }
 
   handleMessage = data => {
-    console.log(data);
     this.handleCommand(data);
     this.setState({
       messages: [...this.state.messages, ...data],
@@ -156,7 +162,7 @@ class App extends Component {
   };
 
   render() {
-    const { usernameConfirmed } = this.state;
+    const { usernameConfirmed, sentMessages } = this.state;
 
     return (
       <div className="App">
@@ -164,6 +170,7 @@ class App extends Component {
           <h1 className="App-title">Chat</h1>
           <button onClick={this.startSending}>Laheta</button>
           <input onChange={e => this.setState({ interval: e.target.value })} />
+          <div style={{ float: "right" }}>{sentMessages}</div>
         </header>
         {!usernameConfirmed ? (
           <div className="Login-div">
