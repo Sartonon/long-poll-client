@@ -37,7 +37,7 @@ class App extends Component {
 
   getPastMessages = async () => {
     const { data } = await axios.get(
-      "http://longpoll.sartonon.fi/api/pastMessages"
+      "http://localhost:3080/longpoll/pastMessages"
     );
     this.setState({ messages: data });
   };
@@ -45,7 +45,7 @@ class App extends Component {
   getMessages = async () => {
     try {
       const { data } = await axios.get(
-        `http://longpoll.sartonon.fi/api/messages?id=${this.getId()}`
+        `http://localhost:3080/longpoll/messages?id=${this.getId()}`
       );
       this.handleMessage(data);
       this.getMessages();
@@ -64,7 +64,7 @@ class App extends Component {
 
   sendMessage = e => {
     e.preventDefault();
-    axios.post(`http://longpoll.sartonon.fi/api/messages`, {
+    axios.post(`http://localhost:3080/longpoll/messages`, {
       name: this.state.username,
       message: this.state.message,
       color: this.state.color
@@ -102,7 +102,7 @@ class App extends Component {
           this.setState(prevState => ({
             sentMessages: prevState.sentMessages + 1
           }));
-          axios.post("http://longpoll.sartonon.fi/api/messages", {
+          axios.post("http://localhost:3080/longpoll/messages", {
             name,
             message,
             color: "green"
@@ -133,7 +133,7 @@ class App extends Component {
   startSending = () => {
     if (this.messageInterval) clearInterval(this.messageInterval);
     this.messageInterval = setInterval(() => {
-      axios.post("http://longpoll.sartonon.fi/api/messages", {
+      axios.post("http://localhost:3080/longpoll/messages", {
         name: "Santeri",
         message: "Moikka!",
         color: "green"
